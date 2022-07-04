@@ -15,8 +15,9 @@ namespace Service_Booking_Management_Microservice.Controllers
         private IDictionary<string, dynamic> response = new Dictionary<string, dynamic>();
         public ServiceReqController()
         {
-            services.Add(new AppService { Id = 1, ProductId = 1, UserId = 1, Description = "Service Done", Problem = "Not working", ReqDate = DateTime.Now, Status = "resolved" });
+            services.Add(new AppService { Id = 1, ProductId = 1, UserId = 1, Description = "Service Done", Problem = "Not working", ReqDate = DateTime.Now, Status = "pending" });
             services.Add(new AppService { Id = 2, ProductId = 2, UserId = 2, Description = "Service Done", Problem = "Not working", ReqDate = DateTime.Now, Status = "pending" });
+            services.Add(new AppService { Id = 3, ProductId = 3, UserId = 2, Description = "Service Done", Problem = "Not working", ReqDate = DateTime.Now, Status = "resolved" });
         }
 
         // GET: api/<ServiceReqController>
@@ -63,7 +64,7 @@ namespace Service_Booking_Management_Microservice.Controllers
         {
             try
             {
-                var searchResult = services.FirstOrDefault(p => p.UserId == userId);
+                var searchResult = services.FindAll(p => p.UserId == userId);
                 if (searchResult != null)
                 {
                     response.Add("error", false);
@@ -104,7 +105,7 @@ namespace Service_Booking_Management_Microservice.Controllers
             {
                 System.Diagnostics.Debug.WriteLine(status);
                 System.Diagnostics.Debug.WriteLine("status");
-                var searchResult = services.FirstOrDefault(p => p.Status == status);
+                var searchResult = services.FindAll(p => p.Status == status);
                 if (searchResult != null)
                 {
                     response.Add("error", false);
