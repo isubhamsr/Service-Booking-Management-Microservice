@@ -2,6 +2,7 @@
 using Service_Booking_Management_Microservice.Model;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using Service_Booking_Management_Microservice.Services;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -11,10 +12,14 @@ namespace Service_Booking_Management_Microservice.Controllers
     [ApiController]
     public class ServiceReqController : ControllerBase
     {
+        private IServiceRequestService _service;
+
         private List<AppService> services = new List<AppService>();
         private IDictionary<string, dynamic> response = new Dictionary<string, dynamic>();
-        public ServiceReqController()
+        public ServiceReqController(IServiceRequestService service)
         {
+            _service = service;
+
             services.Add(new AppService { Id = 1, ProductId = 1, UserId = 1, Description = "Service Done", Problem = "Not working", ReqDate = DateTime.Now, Status = "pending" });
             services.Add(new AppService { Id = 2, ProductId = 2, UserId = 2, Description = "Service Done", Problem = "Not working", ReqDate = DateTime.Now, Status = "pending" });
             services.Add(new AppService { Id = 3, ProductId = 3, UserId = 2, Description = "Service Done", Problem = "Not working", ReqDate = DateTime.Now, Status = "resolved" });
@@ -26,11 +31,12 @@ namespace Service_Booking_Management_Microservice.Controllers
         {
             try
             {
-                if(services.Count > 0)
+                var data = _service.GetServicesList();
+                if (data.Count > 0)
                 {
                     response.Add("error", false);
                     response.Add("message", "Services are fetch");
-                    response.Add("data", services);
+                    response.Add("data", data);
 
                     string jsonResponse = JsonConvert.SerializeObject(response);
 
@@ -64,8 +70,8 @@ namespace Service_Booking_Management_Microservice.Controllers
         {
             try
             {
-                var searchResult = services.FindAll(p => p.UserId == userId);
-                if (searchResult != null)
+                var searchResult = _service.GetServiceRequestDetailsByUserId(userId);
+                if (searchResult.Count > 0)
                 {
                     response.Add("error", false);
                     response.Add("message", "Servies Fetch");
@@ -105,8 +111,9 @@ namespace Service_Booking_Management_Microservice.Controllers
             {
                 System.Diagnostics.Debug.WriteLine(status);
                 System.Diagnostics.Debug.WriteLine("status");
-                var searchResult = services.FindAll(p => p.Status == status);
-                if (searchResult != null)
+
+                var searchResult = _service.GetServiceRequestDetailsByStatus(status);
+                if (searchResult.Count > 0)
                 {
                     response.Add("error", false);
                     response.Add("message", "Servies Fetch");
@@ -140,20 +147,126 @@ namespace Service_Booking_Management_Microservice.Controllers
 
         // POST api/<ServiceReqController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public string Post([FromBody] AppService value)
         {
+            try
+            {
+                var _temp = _service.SaveService(value);
+                if(_temp)
+                {
+                    response.Add("error", false);
+                    response.Add("message", "Data Added");
+
+                    string jsonResponse = JsonConvert.SerializeObject(response);
+
+                    return jsonResponse;
+                }
+                else
+                {
+                    response.Add("error", true);
+                    response.Add("message", "Some Thing Went Wrong");
+
+                    string jsonResponse = JsonConvert.SerializeObject(response);
+
+                    return jsonResponse;
+                }
+            }
+            catch (Exception ex)
+            {
+
+                response.Add("error", true);
+                response.Add("message", ex.Message);
+
+                string jsonResponse = JsonConvert.SerializeObject(response);
+
+                return jsonResponse;
+            }
         }
+        
+
 
         // PUT api/<ServiceReqController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public string Put(int id, [FromBody] AppService value)
         {
+            try
+            {
+                var data = _service.UpdateService(id, value);
+
+                if(data)
+                {
+                    response.Add("error", false);
+                    response.Add("message", "Data Updated");
+
+                    string jsonResponse = JsonConvert.SerializeObject(response);
+
+                    return jsonResponse;
+                }
+                else
+                {
+                    response.Add("error", true);
+                    response.Add("message", "Data Not Updated");
+
+                    string jsonResponse = JsonConvert.SerializeObject(response);
+
+                    return jsonResponse;
+                }
+            }
+            catch (Exception ex)
+            {
+
+                response.Add("error", true);
+                response.Add("message", ex.Message);
+
+                string jsonResponse = JsonConvert.SerializeObject(response);
+
+                return jsonResponse;
+            }
         }
 
         // DELETE api/<ServiceReqController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public string Delete(int id)
         {
+            try
+            {
+                var data = _service.DeleteService(id);
+
+                if (data)
+                {
+                    response.Add("error", false);
+                    response.Add("message", "Service Deleted");
+
+                    string jsonResponse = JsonConvert.SerializeObject(response);
+
+                    return jsonResponse;
+                }
+                else
+                {
+                    response.Add("error", true);
+                    response.Add("message", "Service Deleted, Something Wrong");
+
+                    string jsonResponse = JsonConvert.SerializeObject(response);
+
+                    return jsonResponse;
+                }
+            }
+            catch (Exception ex)
+            {
+
+                response.Add("error", true);
+                response.Add("message", ex.Message);
+
+                string jsonResponse = JsonConvert.SerializeObject(response);
+
+                return jsonResponse;
+            }
+        }
+
+        [HttpPost("Report")]
+        public void Report([FromBody] string value)
+        {
+            System.Diagnostics.Debug.WriteLine("From Report post");
         }
     }
 }
