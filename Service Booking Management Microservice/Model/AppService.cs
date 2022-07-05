@@ -6,16 +6,16 @@ namespace Service_Booking_Management_Microservice.Model
     {
         [Key]
         public int Id { get; set; }
-        [Required]
+        //[Required]
         public int ProductId { get; set; }
-        [Required]
+        //[Required]
         public int UserId { get; set; }
-        [Required]
+        //[Required]
         public DateTime ReqDate { get; set; }
-        [Required]
+        //[Required]
         public string Problem { get; set; }
         public string Description { get; set; }
-        [Required]
+        //[Required]
         public string Status { get; set; }
     }
 }

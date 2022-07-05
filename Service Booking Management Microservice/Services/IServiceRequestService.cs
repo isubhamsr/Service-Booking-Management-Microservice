@@ -10,5 +10,11 @@ namespace Service_Booking_Management_Microservice.Services
         bool DeleteService(int id);
         bool UpdateService(int id, AppService serviceReqModel);
         List<AppService> GetServiceRequestDetailsByStatus(string status);
+
+
+        bool SaveServiceReport(AppServiceReport serviceReportModel);
+        List<AppServiceReport> GetServicesReportList();
+        List<AppServiceReport> GetServiceReportDetailsByUserId(int userId);
+        List<AppServiceReport> GetServiceReportDetailsByReportId(int reportId);
     }
 }

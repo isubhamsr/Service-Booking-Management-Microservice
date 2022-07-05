@@ -35,6 +35,47 @@ namespace Service_Booking_Management_Microservice.Services
             }
         }
 
+        public List<AppServiceReport> GetServiceReportDetailsByReportId(int reportId)
+        {
+            List<AppServiceReport> serviceReport = new List<AppServiceReport>();
+            try
+            {
+                serviceReport = _context.AppServiceReports.Where(p => p.Id == reportId).ToList();
+                return serviceReport;
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception();
+            }
+        }
+
+        public List<AppServiceReport> GetServiceReportDetailsByUserId(int userId)
+        //public void GetServiceReportDetailsByUserId(int userId)
+        {
+            List<AppServiceReport> serviceReports = new List<AppServiceReport>();
+            try
+            {
+               var services = _context.AppServices.Where(p => p.UserId == userId).ToList();
+
+                foreach (var item in services)
+                {
+                    System.Diagnostics.Debug.WriteLine(item.Id);
+                    var serviceReport = _context.AppServiceReports.Where(p => p.SerReqId == item.Id).SingleOrDefault();
+                    System.Diagnostics.Debug.WriteLine(serviceReport.Id);
+                    serviceReports.Add(serviceReport);
+                }
+
+                return serviceReports;
+                
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
         public List<AppService> GetServiceRequestDetailsByStatus(string status)
         {
             List<AppService> services = new List<AppService>();
@@ -80,6 +121,21 @@ namespace Service_Booking_Management_Microservice.Services
             }
         }
 
+        public List<AppServiceReport> GetServicesReportList()
+        {
+            List<AppServiceReport> servicesReport = new List<AppServiceReport>();
+            try
+            {
+                servicesReport = _context.AppServiceReports.ToList();
+                return servicesReport;
+            }
+            catch (Exception)
+            {
+
+                return servicesReport;
+            }
+        }
+
         public bool SaveService(AppService serviceReqModel)
         {
             try
@@ -87,6 +143,27 @@ namespace Service_Booking_Management_Microservice.Services
                 if(serviceReqModel != null)
                 {
                     _context.AppServices.Add(serviceReqModel);
+                    _context.SaveChanges();
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        public bool SaveServiceReport(AppServiceReport serviceReportModel)
+        {
+            try
+            {
+                if (serviceReportModel != null)
+                {
+                    _context.AppServiceReports.Add(serviceReportModel);
                     _context.SaveChanges();
                     return true;
                 }
@@ -129,5 +206,7 @@ namespace Service_Booking_Management_Microservice.Services
                 return false;
             }
         }
+
+
     }
 }

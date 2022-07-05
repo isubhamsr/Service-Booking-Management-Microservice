@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Service_Booking_Management_Microservice.Model;
 
@@ -11,9 +12,11 @@ using Service_Booking_Management_Microservice.Model;
 namespace Service_Booking_Management_Microservice.Migrations
 {
     [DbContext(typeof(AppicationContext))]
-    partial class AppicationContextModelSnapshot : ModelSnapshot
+    [Migration("20220705194912_removeRequireFromAppServise")]
+    partial class removeRequireFromAppServise
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -67,7 +70,7 @@ namespace Service_Booking_Management_Microservice.Migrations
                     b.Property<bool>("ActionTaken")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("AppServiceId")
+                    b.Property<int>("AppServiceId")
                         .HasColumnType("int");
 
                     b.Property<string>("DiagnosisDetails")
@@ -87,10 +90,6 @@ namespace Service_Booking_Management_Microservice.Migrations
                     b.Property<int>("SerReqId")
                         .HasColumnType("int");
 
-                    b.Property<string>("ServiceType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("VisitFees")
                         .HasColumnType("int");
 
@@ -105,7 +104,9 @@ namespace Service_Booking_Management_Microservice.Migrations
                 {
                     b.HasOne("Service_Booking_Management_Microservice.Model.AppService", "AppService")
                         .WithMany()
-                        .HasForeignKey("AppServiceId");
+                        .HasForeignKey("AppServiceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("AppService");
                 });

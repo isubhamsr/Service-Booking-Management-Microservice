@@ -264,9 +264,156 @@ namespace Service_Booking_Management_Microservice.Controllers
         }
 
         [HttpPost("Report")]
-        public void Report([FromBody] string value)
+        public string Report([FromBody] AppServiceReport value)
         {
-            System.Diagnostics.Debug.WriteLine("From Report post");
+            try
+            {
+                var _temp = _service.SaveServiceReport(value);
+                if (_temp)
+                {
+                    response.Add("error", false);
+                    response.Add("message", "Data Added");
+
+                    string jsonResponse = JsonConvert.SerializeObject(response);
+
+                    return jsonResponse;
+                }
+                else
+                {
+                    response.Add("error", true);
+                    response.Add("message", "Some Thing Went Wrong");
+
+                    string jsonResponse = JsonConvert.SerializeObject(response);
+
+                    return jsonResponse;
+                }
+            }
+            catch (Exception ex)
+            {
+
+                response.Add("error", true);
+                response.Add("message", ex.Message);
+
+                string jsonResponse = JsonConvert.SerializeObject(response);
+
+                return jsonResponse;
+            }
+        }
+
+        [HttpGet("Report")]
+        public string Report()
+        {
+            try
+            {
+                var data = _service.GetServicesReportList();
+                if (data.Count > 0)
+                {
+                    response.Add("error", false);
+                    response.Add("message", "Service Reports are fetch");
+                    response.Add("data", data);
+
+                    string jsonResponse = JsonConvert.SerializeObject(response);
+
+                    return jsonResponse;
+                }
+                else
+                {
+                    response.Add("error", true);
+                    response.Add("message", "There is no Service Reports");
+
+                    string jsonResponse = JsonConvert.SerializeObject(response);
+
+                    return jsonResponse;
+                }
+            }
+            catch (Exception ex)
+            {
+
+                response.Add("error", true);
+                response.Add("message", ex.Message);
+
+                string jsonResponse = JsonConvert.SerializeObject(response);
+
+                return jsonResponse;
+            }
+            
+        }
+
+        [HttpGet("Report/{userId}")]
+        public string Report(int userId)
+        {
+            try
+            {
+                var searchResult = _service.GetServiceReportDetailsByUserId(userId);
+                
+                if (searchResult.Count > 0)
+                {
+                    response.Add("error", false);
+                    response.Add("message", "Servie Report Fetch");
+                    response.Add("data", searchResult);
+
+                    string jsonResponse = JsonConvert.SerializeObject(response);
+
+                    return jsonResponse;
+                }
+                else
+                {
+                    response.Add("error", true);
+                    response.Add("message", "There is no Service Report avilable");
+
+                    string jsonResponse = JsonConvert.SerializeObject(response);
+
+                    return jsonResponse;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                response.Add("error", true);
+                response.Add("message", ex.Message);
+
+                string jsonResponse = JsonConvert.SerializeObject(response);
+
+                return jsonResponse;
+            }
+        }
+
+        [HttpGet("Report/GetByReportId{reportId}")]
+        public string GetByReportId(int reportId)
+        {
+            try
+            {
+                var data = _service.GetServiceReportDetailsByReportId(reportId);
+                if (data.Count > 0)
+                {
+                    response.Add("error", false);
+                    response.Add("message", "Service Reports are fetch");
+                    response.Add("data", data);
+
+                    string jsonResponse = JsonConvert.SerializeObject(response);
+
+                    return jsonResponse;
+                }
+                else
+                {
+                    response.Add("error", true);
+                    response.Add("message", "There is no Service Reports");
+
+                    string jsonResponse = JsonConvert.SerializeObject(response);
+
+                    return jsonResponse;
+                }
+            }
+            catch (Exception ex)
+            {
+
+                response.Add("error", true);
+                response.Add("message", ex.Message);
+
+                string jsonResponse = JsonConvert.SerializeObject(response);
+
+                return jsonResponse;
+            }
         }
     }
 }
