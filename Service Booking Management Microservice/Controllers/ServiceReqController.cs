@@ -186,12 +186,12 @@ namespace Service_Booking_Management_Microservice.Controllers
 
 
         // PUT api/<ServiceReqController>/5
-        [HttpPut("{id}")]
-        public string Put(int id, [FromBody] AppService value)
+        [HttpPut]
+        public string Put([FromBody] AppService value)
         {
             try
             {
-                var data = _service.UpdateService(id, value);
+                var data = _service.UpdateService(value);
 
                 if(data)
                 {

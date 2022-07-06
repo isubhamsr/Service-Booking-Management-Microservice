@@ -178,11 +178,11 @@ namespace Service_Booking_Management_Microservice.Services
             }
         }
 
-        public bool UpdateService(int id, AppService serviceReqModel)
+        public bool UpdateService(AppService serviceReqModel)
         {
             try
             {
-                var service = _context.AppServices.Where(p => p.Id == id).FirstOrDefault();
+                var service = _context.AppServices.Where(p => p.Id == serviceReqModel.Id).FirstOrDefault();
                 if(service != null)
                 {
                     service.ReqDate = serviceReqModel.ReqDate;
