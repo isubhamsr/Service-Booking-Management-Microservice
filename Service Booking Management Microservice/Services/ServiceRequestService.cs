@@ -40,7 +40,7 @@ namespace Service_Booking_Management_Microservice.Services
             List<AppServiceReport> serviceReport = new List<AppServiceReport>();
             try
             {
-                serviceReport = _context.AppServiceReports.Where(p => p.Id == reportId).ToList();
+                serviceReport = _context.AppServiceReports.Where(p => p.Id == reportId).Include(p => p.AppService).ToList();
                 return serviceReport;
             }
             catch (Exception ex)
@@ -61,7 +61,7 @@ namespace Service_Booking_Management_Microservice.Services
                 foreach (var item in services)
                 {
                     System.Diagnostics.Debug.WriteLine(item.Id);
-                    var serviceReport = _context.AppServiceReports.Where(p => p.SerReqId == item.Id).SingleOrDefault();
+                    var serviceReport = _context.AppServiceReports.Where(p => p.SerReqId == item.Id).Include(p => p.AppService).SingleOrDefault();
                     System.Diagnostics.Debug.WriteLine(serviceReport.Id);
                     serviceReports.Add(serviceReport);
                 }
@@ -126,7 +126,7 @@ namespace Service_Booking_Management_Microservice.Services
             List<AppServiceReport> servicesReport = new List<AppServiceReport>();
             try
             {
-                servicesReport = _context.AppServiceReports.ToList();
+                servicesReport = _context.AppServiceReports.Include(p => p.AppService).ToList();
                 return servicesReport;
             }
             catch (Exception)

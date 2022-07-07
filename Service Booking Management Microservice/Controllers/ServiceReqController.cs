@@ -3,11 +3,13 @@ using Service_Booking_Management_Microservice.Model;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Service_Booking_Management_Microservice.Services;
+using Microsoft.AspNetCore.Authorization;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace Service_Booking_Management_Microservice.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ServiceReqController : ControllerBase
@@ -378,7 +380,7 @@ namespace Service_Booking_Management_Microservice.Controllers
             }
         }
 
-        [HttpGet("Report/GetByReportId{reportId}")]
+        [HttpGet("Report/GetByReportId/{reportId}")]
         public string GetByReportId(int reportId)
         {
             try

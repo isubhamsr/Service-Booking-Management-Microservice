@@ -16,6 +16,6 @@ namespace Service_Booking_Management_Microservice.Model
         public string Problem { get; set; }
         public string Description { get; set; }
         //[Required]
-        public string Status { get; set; }
+        public string Status { get; set; } = "pending";
     }
 }
