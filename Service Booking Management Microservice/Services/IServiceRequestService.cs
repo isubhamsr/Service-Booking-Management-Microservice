@@ -6,7 +6,7 @@ namespace Service_Booking_Management_Microservice.Services
     {
         List<AppService> GetServicesList();
         List<AppService> GetServiceRequestDetailsByUserId(int userId);
-        bool SaveService(AppService serviceReqModel);
+        bool SaveService(int userId, AppService serviceReqModel);
         bool DeleteService(int id);
         bool UpdateService(AppService serviceReqModel);
         List<AppService> GetServiceRequestDetailsByStatus(string status);

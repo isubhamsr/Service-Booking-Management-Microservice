@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using Service_Booking_Management_Microservice.Services;
 using Microsoft.AspNetCore.Authorization;
+using System.IdentityModel.Tokens.Jwt;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -153,7 +154,17 @@ namespace Service_Booking_Management_Microservice.Controllers
         {
             try
             {
-                var _temp = _service.SaveService(value);
+                string tokenFromHeader = Request.Headers["Authorization"];
+                var token = tokenFromHeader.Replace("Bearer ", string.Empty);
+
+                var handler = new JwtSecurityTokenHandler();
+                var decodedToken = handler.ReadJwtToken(token);
+
+
+                string id = decodedToken.Claims.First(claim => claim.Type == "Id").Value;
+                int userId = int.Parse(id);
+
+                var _temp = _service.SaveService(userId, value);
                 if(_temp)
                 {
                     response.Add("error", false);

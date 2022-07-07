@@ -136,13 +136,13 @@ namespace Service_Booking_Management_Microservice.Services
             }
         }
 
-        public bool SaveService(AppService serviceReqModel)
+        public bool SaveService(int userId, AppService serviceReqModel)
         {
             try
             {
                 if(serviceReqModel != null)
                 {
-                    _context.AppServices.Add(serviceReqModel);
+                    _context.AppServices.Add(new AppService { ProductId = serviceReqModel.ProductId, UserId = userId, ReqDate = serviceReqModel.ReqDate, Problem = serviceReqModel.Problem, Description = serviceReqModel.Description } );
                     _context.SaveChanges();
                     return true;
                 }
