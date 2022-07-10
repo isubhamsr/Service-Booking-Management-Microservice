@@ -54,16 +54,25 @@ namespace Service_Booking_Management_Microservice.Services
         //public void GetServiceReportDetailsByUserId(int userId)
         {
             List<AppServiceReport> serviceReports = new List<AppServiceReport>();
+            System.Diagnostics.Debug.WriteLine("userId");
+            System.Diagnostics.Debug.WriteLine(userId);
             try
             {
                var services = _context.AppServices.Where(p => p.UserId == userId).ToList();
 
                 foreach (var item in services)
                 {
+                    System.Diagnostics.Debug.WriteLine("item.Id");
                     System.Diagnostics.Debug.WriteLine(item.Id);
-                    var serviceReport = _context.AppServiceReports.Where(p => p.SerReqId == item.Id).Include(p => p.AppService).SingleOrDefault();
-                    System.Diagnostics.Debug.WriteLine(serviceReport.Id);
-                    serviceReports.Add(serviceReport);
+                    var serviceReport = _context.AppServiceReports.Where(p => p.SerReqId == item.Id).FirstOrDefault();
+                    if (serviceReport != null)
+                    {
+                        System.Diagnostics.Debug.WriteLine(serviceReport.Id);
+                        serviceReports.Add(serviceReport);
+                    }
+                    //System.Diagnostics.Debug.WriteLine(item.Id);
+
+
                 }
 
                 return serviceReports;
